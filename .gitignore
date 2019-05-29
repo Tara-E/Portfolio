@@ -1,8 +1,15 @@
+.DS_Store
+Thumbs.db
+
 # Compiled class file
 *.class
 
 # Log file
 *.log
+
+# Built application files
+*.apk
+*.ap_
 
 # BlueJ files
 *.ctxt
@@ -19,5 +26,37 @@
 *.tar.gz
 *.rar
 
+#idea
+.idea/
+*.iml 
+
+# Generated files
+bin/
+gen/
+obj/
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+# Gradle files
+.gradle/
+build/
+
+*.prefs
+project.properties
+*.classpath
+*.project
+
+.settings/
+
+xcuserdata/
+*.xcodeproj/project.xcworkspace
+**/xcuserdata/
+*.xccheckout
+#*.pbxproj
+*.rej
+*.rej
+*.orig
+*.a
+*.xcworkspacedata
+**/xcshareddata/IDEWorkspaceChecks.plist
