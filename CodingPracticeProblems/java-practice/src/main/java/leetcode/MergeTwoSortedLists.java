@@ -16,7 +16,7 @@ import util.ListNode;
  * <p>
  * OTHER TAGS: Iterative, Easy
  * <p>
- * Time complexity: O(l1.length + l2.length)
+ * Time complexity: O(n + m)
  * Space complexity: 0(1)
  * <p>
  * QUESTION:
