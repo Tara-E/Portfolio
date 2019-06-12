@@ -6,10 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import com.tara.coxintv.apiservice.ApiService;
 import com.tara.coxintv.apiservice.ServiceGenerator;
 import com.tara.coxintv.models.DataSet;
+import com.tara.coxintv.models.Vehicle;
 import com.tara.coxintv.models.Vehicles;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +30,22 @@ public class MainActivity extends AppCompatActivity {
         doTheThing();
     }
 
+    public Observable<List<Vehicle>> getVehicleList(ApiService apiService, String dataSetId, List<Integer> vehicleIds) {
+        List<Observable<Vehicle>> requests = new ArrayList<>();
+        for (int vehicleId : vehicleIds) {
+            requests.add(apiService.getVehicle(dataSetId, vehicleId));
+        }
+        return Observable.zip(requests,
+                (vehicle) -> toList
+
+
+                    @Override
+                    public Object apply(Vehicle o) throws Exception {
+                        return o;
+                    }
+                }
+    }
+
     public void doTheThing() {
         final ApiService apiService = ServiceGenerator.createService(ApiService.class);
         Call<DataSet> dataSetCall = apiService.createDataSet();
@@ -32,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<DataSet> call, Response<DataSet> response) {
                 if (response.isSuccessful()) {
-                    DataSet dataset = response.body();
+                    final DataSet dataset = response.body();
                     System.out.println(dataset);
 
 
@@ -43,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(Call<Vehicles> call, Response<Vehicles> response) {
                             if (response.isSuccessful()) {
                                 Vehicles vehicles = response.body();
-
+                                getVehicleList(apiService, dataset.getDatasetId(), vehicles.getVehicleIds());
                                 String what = "";
                             } else {
                                 System.out.println(response.errorBody());
