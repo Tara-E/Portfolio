@@ -1,12 +1,11 @@
-package com.tara.coxintv.models.answer;
+package com.tara.coxintv.models.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.tara.coxintv.models.Vehicle;
 
 import java.util.List;
 
-public class Dealer {
+public class DtoDealer {
 
     @SerializedName("dealerId")
     @Expose
@@ -16,7 +15,7 @@ public class Dealer {
     private String name;
     @SerializedName("vehicles")
     @Expose
-    private List<Vehicle> vehicles = null;
+    private List<DtoVehicle> vehicles = null;
 
     public int getDealerId() {
         return dealerId;
@@ -34,11 +33,11 @@ public class Dealer {
         this.name = name;
     }
 
-    public List<Vehicle> getVehicles() {
+    public List<DtoVehicle> getVehicles() {
         return vehicles;
     }
 
-    public void setVehicles(List<Vehicle> vehicles) {
+    public void setVehicles(List<DtoVehicle> vehicles) {
         this.vehicles = vehicles;
     }
 }

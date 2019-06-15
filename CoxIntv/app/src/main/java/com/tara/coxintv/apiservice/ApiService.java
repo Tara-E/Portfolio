@@ -1,10 +1,11 @@
 package com.tara.coxintv.apiservice;
 
 import com.tara.coxintv.models.DataSet;
+import com.tara.coxintv.models.Dealer;
 import com.tara.coxintv.models.Vehicle;
 import com.tara.coxintv.models.Vehicles;
-import com.tara.coxintv.models.answer.Dealers;
-import com.tara.coxintv.models.answer.Response;
+import com.tara.coxintv.models.AnswerResponse;
+import com.tara.coxintv.models.dto.DtoAnswer;
 
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -24,9 +25,9 @@ public interface ApiService {
     @GET("/api/{datasetId}/vehicles/{vehicleid}")
     Observable<Vehicle> getVehicle(@Path("datasetId") String datasetId, @Path("vehicleid") Integer vehicleid);
 
-    @GET("/api/{datasetId}/vehicles/{dealerid}")
-    Call<Dealers> getDealers(@Path("datasetId") String datasetId, @Path("dealerid") String dealerid);
+    @GET("/api/{datasetId}/dealers/{dealerid}")
+    Observable<Dealer> getDealer(@Path("datasetId") String datasetId, @Path("dealerid") Integer dealerid);
 
     @POST("/api/{datasetId}/answer")
-    Call<Response> createUser(@Path("datasetId") String datasetId, @Body Dealers dealers);
+    Observable<AnswerResponse> postAnswer(@Path("datasetId") String datasetId, @Body DtoAnswer answer);
 }

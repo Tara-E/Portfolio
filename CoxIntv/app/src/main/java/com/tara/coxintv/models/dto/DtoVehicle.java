@@ -1,9 +1,9 @@
-package com.tara.coxintv.models.answer;
+package com.tara.coxintv.models.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Vehicle {
+public class DtoVehicle {
 
     @SerializedName("vehicleId")
     @Expose

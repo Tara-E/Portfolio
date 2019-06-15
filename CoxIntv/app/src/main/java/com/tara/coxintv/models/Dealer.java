@@ -3,7 +3,7 @@ package com.tara.coxintv.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Dealers {
+public class Dealer {
 
     @SerializedName("dealerId")
     @Expose

@@ -1,9 +1,9 @@
-package com.tara.coxintv.models.answer;
+package com.tara.coxintv.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Response {
+public class AnswerResponse {
 
     @SerializedName("success")
     @Expose
