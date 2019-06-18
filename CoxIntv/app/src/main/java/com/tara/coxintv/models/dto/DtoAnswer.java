@@ -1,9 +1,12 @@
 package com.tara.coxintv.models.dto;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 public class DtoAnswer {
@@ -20,15 +23,15 @@ public class DtoAnswer {
         this.dealers = dealers;
     }
 
-    public List<Integer> getDealerIds() {
-        if (dealers == null) {
-            return null;
+    @Override
+    public String toString() {
+        Gson gson = new Gson();
+        String string = super.toString();
+        try {
+            JSONObject json = new JSONObject(gson.toJson(this));
+            string = json.toString(2);
+        } catch (JSONException ignored) {
         }
-
-        List<Integer> dealerIds = new ArrayList<>();
-        for (DtoDealer d : dealers) {
-            dealerIds.add(d.getDealerId());
-        }
-        return dealerIds;
+        return string;
     }
 }

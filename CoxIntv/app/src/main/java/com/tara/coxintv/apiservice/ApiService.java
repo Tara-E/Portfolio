@@ -1,14 +1,13 @@
 package com.tara.coxintv.apiservice;
 
+import com.tara.coxintv.models.AnswerResponse;
 import com.tara.coxintv.models.DataSet;
 import com.tara.coxintv.models.Dealer;
 import com.tara.coxintv.models.Vehicle;
 import com.tara.coxintv.models.Vehicles;
-import com.tara.coxintv.models.AnswerResponse;
 import com.tara.coxintv.models.dto.DtoAnswer;
 
 import io.reactivex.Observable;
-import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -17,10 +16,10 @@ import retrofit2.http.Path;
 public interface ApiService {
 
     @GET("/api/datasetId")
-    Call<DataSet> createDataSet();
+    Observable<DataSet> createDataSet();
 
     @GET("/api/{datasetId}/vehicles")
-    Call<Vehicles> getVehicleList(@Path("datasetId") String datasetId);
+    Observable<Vehicles> getVehicleList(@Path("datasetId") String datasetId);
 
     @GET("/api/{datasetId}/vehicles/{vehicleid}")
     Observable<Vehicle> getVehicle(@Path("datasetId") String datasetId, @Path("vehicleid") Integer vehicleid);

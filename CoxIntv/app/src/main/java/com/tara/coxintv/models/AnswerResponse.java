@@ -38,4 +38,19 @@ public class AnswerResponse {
     public void setTotalMilliseconds(int totalMilliseconds) {
         this.totalMilliseconds = totalMilliseconds;
     }
+
+    @Override
+    public java.lang.String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("\nIsSuccess:\n");
+        sb.append(success + "\n");
+        if (message != null) {
+            sb.append("\nMessage:\n");
+            sb.append(message + "\n");
+        }
+        sb.append("\nTotalMilliseconds:\n");
+        sb.append(totalMilliseconds + "\n");
+
+        return sb.toString();
+    }
 }
