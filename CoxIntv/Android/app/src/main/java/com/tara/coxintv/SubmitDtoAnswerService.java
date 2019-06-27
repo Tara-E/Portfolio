@@ -42,6 +42,13 @@ public class SubmitDtoAnswerService {
                 );
     }
 
+    /**
+     *
+     * @param apiService
+     * @param dataSetId
+     * @param vehicleIds
+     * @return Observable<DtoAnswer>
+     */
     private static Observable<DtoAnswer> getAnswer(ApiService apiService, String dataSetId, List<Integer> vehicleIds) {
         final DtoConverter converter = new DtoConverter();
         final Map<Integer, List<DtoVehicle>> dealerVehicleMap = new ConcurrentHashMap<>();
