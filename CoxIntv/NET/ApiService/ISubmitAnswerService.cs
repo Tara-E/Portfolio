@@ -1,12 +1,13 @@
 ﻿using System.Threading.Tasks;
-using CoxIntv.Model.DataSet;
 
 namespace CoxIntv.ApiService
 {
     public class AnswerServiceResponse
     {
-        public AnswerResponse answerResponse;
-        public Answer answer;
+        public string JsonRequest { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public int TotalMilliseconds { get; set; }
     }
 
     public interface ISubmitAnswerService

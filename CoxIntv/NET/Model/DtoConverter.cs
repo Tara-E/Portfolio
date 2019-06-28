@@ -25,22 +25,17 @@ namespace CoxIntv.Model
         public static Answer From(IDictionary<int, ICollection<DtoVehicle>> dealerVehicleMap, ICollection<Dealer> dealers)
         {
             ICollection<DtoDealer> dealerList = new List<DtoDealer>();
-            foreach (KeyValuePair<int, ICollection<DtoVehicle>> entry in dealerVehicleMap)
+
+            foreach (Dealer d in dealers)
             {
-                DtoDealer dealer = new DtoDealer();
-                dealer.DealerId = entry.Key;
-                dealer.Vehicles = entry.Value;
-
-                foreach (Dealer d in dealers)
+                if (d != null)
                 {
-                    if (dealer.DealerId == d.DealerId)
-                    {
-                        dealer.Name = d.Name;
-                        break;
-                    }
+                    DtoDealer dealer = new DtoDealer();
+                    dealer.DealerId = d.DealerId;
+                    dealer.Name = d.Name;
+                    dealer.Vehicles = dealerVehicleMap[d.DealerId];
+                    dealerList.Add(dealer);
                 }
-
-                dealerList.Add(dealer);
             }
 
             Answer answer = new Answer();

@@ -1,8 +1,5 @@
 ﻿using CoxIntv.ApiService;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ConsoleApp
@@ -15,9 +12,19 @@ namespace ConsoleApp
         {
             ICoxIntvApiService apiService = new CoxIntvApiService(new Uri(BaseUriString));
             ISubmitAnswerService submitAnswerService = new SubmitAnswerService(apiService);
+
+            Console.WriteLine("Submitting new Answer... ");
             Task<AnswerServiceResponse> answerTask = submitAnswerService.SubmitNewAnswer();
+
             answerTask.Wait();
-            AnswerServiceResponse what = answerTask.Result;
+            AnswerServiceResponse response = answerTask.Result;
+
+            Console.WriteLine("\n---------- Response ----------");
+            Console.WriteLine("Success: " + response.Success);
+            Console.WriteLine("Message: " + response.Message);
+            Console.WriteLine("TotalMilliseconds: " + response.TotalMilliseconds + "(ms)");
+            Console.WriteLine("\n---------- Request ----------");
+            Console.WriteLine("AnswerServiceResponse " + response.JsonRequest);
         }
     }
 }
