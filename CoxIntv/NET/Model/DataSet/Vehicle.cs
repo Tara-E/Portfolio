@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CoxIntv.Model.Vehicles
+namespace CoxIntv.Model.DataSet
 {
     public class Vehicle
     {
@@ -9,6 +9,5 @@ namespace CoxIntv.Model.Vehicles
         public int Year { get; set; }
         public string Make { get; set; }
         public string Model { get; set; }
-        public int DealerId { get; set; }
     }
 }

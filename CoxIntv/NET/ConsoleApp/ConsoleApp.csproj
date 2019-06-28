@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{13AFF09B-EF3A-43E7-A586-137AB53C6829}</ProjectGuid>
+    <ProjectGuid>{68563809-8D15-463B-8143-F9B658A3CD48}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>CoxIntvConsoleApp</RootNamespace>
-    <AssemblyName>CoxIntvConsoleApp</AssemblyName>
+    <RootNamespace>ConsoleApp</RootNamespace>
+    <AssemblyName>ConsoleApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -48,6 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ApiService\ApiService.csproj">
+      <Project>{C7A19818-E708-4C80-A76B-E7D7F2911F5B}</Project>
+      <Name>ApiService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

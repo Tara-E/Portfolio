@@ -12,8 +12,10 @@ namespace CoxIntv.ApiService
 
         public CoxIntvApiService(Uri baseUri)
         {
-            client = new HttpClient();
-            client.BaseAddress = baseUri;
+            client = new HttpClient
+            {
+                BaseAddress = baseUri
+            };
         }
 
         async Task<DataSet> ICoxIntvApiService.CreateDataSet()
@@ -28,7 +30,7 @@ namespace CoxIntv.ApiService
 
         async Task<Vehicles> ICoxIntvApiService.GetVehicles(string datasetId)
         {
-            const string path = "/api/{datasetId}/vehicles";
+            string path = $"/api/{datasetId}/vehicles";
 
             HttpResponseMessage response = await client.GetAsync(path);
             response.EnsureSuccessStatusCode();
@@ -38,7 +40,7 @@ namespace CoxIntv.ApiService
 
         async Task<Model.Vehicles.Vehicle> ICoxIntvApiService.GetVehicle(string datasetId, int vehicleId)
         {
-            const string path = "/api/{datasetId}/vehicles/{vehicleId}";
+            string path = $"/api/{datasetId}/vehicles/{vehicleId}";
 
             HttpResponseMessage response = await client.GetAsync(path);
             response.EnsureSuccessStatusCode();
@@ -48,7 +50,7 @@ namespace CoxIntv.ApiService
 
         async Task<Model.Dealers.Dealer> ICoxIntvApiService.GetDealer(string datasetId, int dealerId)
         {
-            const string path = "/api/{datasetId}/dealers/{dealerid}";
+            string path = $"/api/{datasetId}/dealers/{dealerId}";
 
             HttpResponseMessage response = await client.GetAsync(path);
             response.EnsureSuccessStatusCode();
@@ -58,7 +60,7 @@ namespace CoxIntv.ApiService
 
         async Task<AnswerResponse> ICoxIntvApiService.PostAnswer(string datasetId, Answer answer)
         {
-            const string path = "/api/{datasetId}/answer";
+            string path = $"/api/{datasetId}/answer";
 
             HttpResponseMessage response = await client.PostAsJsonAsync(path, answer);
             response.EnsureSuccessStatusCode();

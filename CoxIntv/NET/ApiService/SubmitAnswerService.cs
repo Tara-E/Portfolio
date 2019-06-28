@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoxIntv.Model;
@@ -32,8 +33,13 @@ namespace CoxIntv.ApiService
 
             Task<Answer> answerTask = await vehiclesTask.ContinueWith(task => GetAnswer(datasetId, task.Result.VehicleIds));
 
+            answerTask.ContinueWith(task =>
+            {
+                AnswerResponse response = new AnswerResponse();
+                response.Answer = task.Result;
+            }
 
-            return await new Task<AnswerServiceResponse>(null);
+            return await new Task<AnswerServiceResponse>(new Task(new AnswerServiceResponse()));
 
         }
 
@@ -41,17 +47,25 @@ namespace CoxIntv.ApiService
         {
             ConcurrentDictionary<int, ICollection<DtoVehicle>> dealerVehicleMap = new ConcurrentDictionary<int, ICollection<DtoVehicle>>();
             var tasks = new List<Task<Model.Dealers.Dealer>>();
+
             foreach (int vehicleId in vehicleIds)
             {
-                Task<Model.Dealers.Dealer> dealerTask = await apiService.GetVehicle(datasetId, vehicleId).ContinueWith(task =>
+                var dealer = apiService.GetVehicle(datasetId, vehicleId).ContinueWith(task =>
                 {
                     Vehicle vehicle = task.Result;
+                    //return new Task<Model.Dealers.Dealer>(null);
                     int dealerId = vehicle.DealerId;
 
+                    Console.WriteLine("got dealerID " + dealerId);
+
                     //Get this vehicle's dealer name if we aren't already getting it
-                    ICollection<DtoVehicle> vehicleList = dealerVehicleMap[dealerId];
+                    ICollection<DtoVehicle> vehicleList;
                     bool dealerAlreadyExists = false;
-                    if (vehicleList == null)
+                    if (dealerVehicleMap.ContainsKey(dealerId))
+                    {
+                        vehicleList = dealerVehicleMap[dealerId];
+                    }
+                    else
                     {
                         dealerAlreadyExists = true;
                         vehicleList = new List<DtoVehicle>();
@@ -62,14 +76,19 @@ namespace CoxIntv.ApiService
 
                     return dealerAlreadyExists ?
                         null :
-                        apiService.GetDealer(datasetId, dealerId);
+                        apiService.GetDealer(datasetId, dealerId).Result;
                 });
 
-                tasks.Add(dealerTask);
+                tasks.Add(dealer);
             }
 
             // Wait for all tasks to finish then return Answer
-            return await Task.WhenAll(tasks).ContinueWith(task => DtoConverter.From(dealerVehicleMap, task.Result));
+            Answer answer = await Task.WhenAll(tasks).ContinueWith(task => DtoConverter.From(dealerVehicleMap, task.Result));
+
+            string whattttt = "";
+
+            Console.WriteLine("past WhenAll........");
+            return answer;
         }
     }
 }

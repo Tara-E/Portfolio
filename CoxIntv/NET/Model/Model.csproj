@@ -42,10 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataSet\Answer.cs" />
+    <Compile Include="DataSet\AnswerResponse.cs" />
     <Compile Include="DataSet\DataSet.cs" />
     <Compile Include="DataSet\Dealer.cs" />
     <Compile Include="DataSet\Vehicle.cs" />
     <Compile Include="Dealers\Dealer.cs" />
+    <Compile Include="DtoConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vehicles\Vehicle.cs" />
     <Compile Include="Vehicles\Vehicles.cs" />
