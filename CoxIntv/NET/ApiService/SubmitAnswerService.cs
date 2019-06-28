@@ -1,47 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoxIntv.Model;
 using CoxIntv.Model.DataSet;
-using CoxIntv.Model.Vehicles;
 using Newtonsoft.Json;
 using DtoVehicle = CoxIntv.Model.DataSet.Vehicle;
 using Vehicle = CoxIntv.Model.Vehicles.Vehicle;
 
 namespace CoxIntv.ApiService
 {
+    /// <inheritdoc/>
     public class SubmitAnswerService : ISubmitAnswerService
     {
         private ICoxIntvApiService apiService;
 
+        /// <summary>
+        /// The class constructor.
+        /// </summary>
+        /// <param name="apiService">
+        /// The ICoxIntvApiService used to communicate with Cox API
+        /// </param>
         public SubmitAnswerService(ICoxIntvApiService apiService)
         {
             this.apiService = apiService;
         }
 
+        /// <inheritdoc/>
         async Task<AnswerServiceResponse> ISubmitAnswerService.SubmitNewAnswer()
         {
-            // Create a new dataset and get the vehicles for it
-            string datasetId = null;
-            Task<Vehicles> vehiclesTask = await apiService.CreateDataSet()
-                .ContinueWith(task =>
-                {
-                    datasetId = task.Result.DatasetId;
-                    return apiService.GetVehicles(datasetId);
-                });
+            string datasetId = (await apiService.CreateDataSet()).DatasetId;
 
             // Create an answer for this dataset
-            Task<Answer> answerTask = await vehiclesTask.ContinueWith(task => GetAnswer(datasetId, task.Result.VehicleIds));
+            Answer answer = await GetAnswer(datasetId);
 
             // Submit the answer and return response
             AnswerServiceResponse finalServiceResponse = new AnswerServiceResponse();
-            AnswerResponse answerResponse = await answerTask
-                .ContinueWith(task =>
-                {
-                    Answer answer = task.Result;
-                    finalServiceResponse.JsonRequest = JsonConvert.SerializeObject(answer, Formatting.Indented);
-                    return apiService.PostAnswer(datasetId, answer);
-                }).Result;
+            finalServiceResponse.JsonRequest = JsonConvert.SerializeObject(answer, Formatting.Indented);
+            AnswerResponse answerResponse = await apiService.PostAnswer(datasetId, answer);
 
             finalServiceResponse.Success = answerResponse.Success;
             finalServiceResponse.Message = answerResponse.Message;
@@ -51,13 +45,23 @@ namespace CoxIntv.ApiService
 
         }
 
-        private async Task<Answer> GetAnswer(string datasetId, ICollection<int> vehicleIds)
+        /// <summary>
+        /// Creates a new Answer for this datasetId
+        /// <remarks>
+        /// Gets information for all vehicles in parallel.
+        /// When information for a vehicle returns, get the information for its dealer, unless we have it or are already getting it.
+        /// Wait for all vehicle and dealer information, transform it into an Answer, then return the Answer.
+        /// </remarks>
+        private async Task<Answer> GetAnswer(string datasetId)
         {
+            ICollection<int> vehicleIds = (await apiService.GetVehicles(datasetId)).VehicleIds;
+
             Dictionary<int, ICollection<DtoVehicle>> dealerVehicleMap = new Dictionary<int, ICollection<DtoVehicle>>();
             var tasks = new List<Task<Model.Dealers.Dealer>>();
 
             foreach (int vehicleId in vehicleIds)
             {
+                // Get all vehicle information in parallel
                 var dealer = apiService.GetVehicle(datasetId, vehicleId).ContinueWith(task =>
                 {
                     Vehicle vehicle = task.Result;
@@ -78,7 +82,11 @@ namespace CoxIntv.ApiService
             return await Task.WhenAll(tasks).ContinueWith(task => DtoConverter.From(dealerVehicleMap, task.Result));
         }
 
-        // returns true if the dealer already existed otherwise false
+        /// <summary>
+        /// Adds this dealer to our dealer dictionary, and adds this vehicle to the dealer's vehicle list.
+        /// <returns>
+        /// Returns true if this dealer was already in our dictionary, otherwise false.
+        /// </returns>
         private bool UpdateDealerVehicleMap(Dictionary<int, ICollection<DtoVehicle>> dictionary, int dealerId, Vehicle vehicle)
         {
             bool dealerAlreadyExists;

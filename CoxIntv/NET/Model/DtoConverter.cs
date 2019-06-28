@@ -7,8 +7,17 @@ using DtoDealer = CoxIntv.Model.DataSet.Dealer;
 
 namespace CoxIntv.Model
 {
+    /// <summary>
+    /// Helper methods used to transform Model data.
+    /// </summary>
+    /// <remarks>
+    /// This helps keep our ApiService decoupled from Model data.
+    /// </remarks>
     public class DtoConverter
     {
+        /// <summary>
+        /// Transforms the domain Vehicle to our Answer's Vehicle object.
+        /// </summary>
         public static DtoVehicle From(Vehicle vehicle)
         {
             DtoVehicle dtoVehicle = new DtoVehicle
@@ -22,6 +31,15 @@ namespace CoxIntv.Model
             return dtoVehicle;
         }
 
+        /// <summary>
+        /// Transforms a dictionary of dealerIds, and a collection of dealer information to an Answer.
+        /// </summary>
+        /// <param name="dealerVehicleMap">
+        /// a Dictionary that maps dealerId keys to thier vehicle list values.
+        /// </param>
+        /// <param name="dealers">
+        /// A Collection of Dealers
+        /// </param>
         public static Answer From(IDictionary<int, ICollection<DtoVehicle>> dealerVehicleMap, ICollection<Dealer> dealers)
         {
             ICollection<DtoDealer> dealerList = new List<DtoDealer>();

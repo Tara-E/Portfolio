@@ -8,6 +8,10 @@ namespace ConsoleApp
     {
         private const string BaseUriString = "http://api.coxauto-interview.com";
 
+        /// <summary>
+        /// The entry point for the application.
+        /// </summary>
+        /// <param name="args"> A list of command line arguments</param>
         static void Main(string[] args)
         {
             ICoxIntvApiService apiService = new CoxIntvApiService(new Uri(BaseUriString));
