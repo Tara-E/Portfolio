@@ -14,7 +14,7 @@ namespace CoxIntv.ApiService
         /// <summary>
         /// The class constructor.
         /// </summary>
-        /// <param name="apiService">
+        /// <param name="baseUri">
         /// The base address of Uniform Resource Identifier (URI) of the Internet resource used when sending requests.
         /// </param>
         public CoxIntvApiService(Uri baseUri)

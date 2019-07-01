@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CoxIntv.Model;
 using CoxIntv.Model.DataSet;
@@ -33,8 +34,10 @@ namespace CoxIntv.ApiService
             Answer answer = await GetAnswer(datasetId);
 
             // Submit the answer and return response
-            AnswerServiceResponse finalServiceResponse = new AnswerServiceResponse();
-            finalServiceResponse.JsonRequest = JsonConvert.SerializeObject(answer, Formatting.Indented);
+            AnswerServiceResponse finalServiceResponse = new AnswerServiceResponse
+            {
+                JsonRequest = JsonConvert.SerializeObject(answer, Formatting.Indented)
+            };
             AnswerResponse answerResponse = await apiService.PostAnswer(datasetId, answer);
 
             finalServiceResponse.Success = answerResponse.Success;
@@ -47,6 +50,7 @@ namespace CoxIntv.ApiService
 
         /// <summary>
         /// Creates a new Answer for this datasetId
+        /// </summary>
         /// <remarks>
         /// Gets information for all vehicles in parallel.
         /// When information for a vehicle returns, get the information for its dealer, unless we have it or are already getting it.
@@ -64,6 +68,8 @@ namespace CoxIntv.ApiService
                 // Get all vehicle information in parallel
                 var dealer = apiService.GetVehicle(datasetId, vehicleId).ContinueWith(task =>
                 {
+                    if (task.IsFaulted) throw GetInnerMostException(task.Exception);
+
                     Vehicle vehicle = task.Result;
                     int dealerId = vehicle.DealerId;
 
@@ -79,11 +85,17 @@ namespace CoxIntv.ApiService
             }
 
             // Wait for all tasks to finish then return Answer
-            return await Task.WhenAll(tasks).ContinueWith(task => DtoConverter.From(dealerVehicleMap, task.Result));
+            return await Task.WhenAll(tasks).
+                ContinueWith(task =>
+                {
+                    if (task.IsFaulted) throw GetInnerMostException(task.Exception);
+                    return DtoConverter.From(dealerVehicleMap, task.Result);
+                });
         }
 
         /// <summary>
         /// Adds this dealer to our dealer dictionary, and adds this vehicle to the dealer's vehicle list.
+        /// </summary>
         /// <returns>
         /// Returns true if this dealer was already in our dictionary, otherwise false.
         /// </returns>
@@ -107,6 +119,17 @@ namespace CoxIntv.ApiService
             vehicleList.Add(DtoConverter.From(vehicle));
 
             return dealerAlreadyExists;
+        }
+
+        private static Exception GetInnerMostException(Exception ex)
+        {
+            Exception currentEx = ex;
+            while (currentEx.InnerException != null)
+            {
+                currentEx = currentEx.InnerException;
+            }
+
+            return currentEx;
         }
     }
 }
