@@ -1,0 +1,2 @@
+MicroServices best practices (AWS), many small databases, rollback microservice using cloudwatch, microservice to sync datababses, pull/push model aggregation, decoupling with queues:https://www.youtube.com/watch?v=KPtLbSEFe6c
+Teraform:https://blog.gruntwork.io/an-introduction-to-terraform-f17df9c6d180
